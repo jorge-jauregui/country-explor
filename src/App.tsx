@@ -1,25 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { ReactElement, useEffect } from 'react';
 import './App.css';
+import axios, { AxiosRequestConfig } from 'axios';
 
-function App() {
+const App: React.FC = (): ReactElement => {
+  // World Bank API information: https://datahelpdesk.worldbank.org/knowledgebase/topics/125589-developer-information
+  const options: AxiosRequestConfig<any> = {
+    method: 'GET',
+    url: 'https://api.worldbank.org/v2/country/BRA/indicator/NY.GDP.MKTP.CD?format=json',
+  };
+
+  const getGDPData = () => {
+    axios.request(options).then(function (response) {
+      console.log("res", response.data)
+    }).catch(function (error) {
+      console.error(error)
+    });
+  }
+
+  useEffect(() => {
+    getGDPData()
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <div>Hello world</div>
   );
 }
 

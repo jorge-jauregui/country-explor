@@ -1,6 +1,6 @@
 import { Autocomplete, Button, TextField } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import './App.css';
 import { getCountryGDP } from './store/actions';
 import { countries, CountryGDP } from './store/constants';
@@ -12,10 +12,19 @@ const App: React.FC = (): ReactElement => {
   const [countryAbbreviation, setCountryAbbreviation] = useState<string>("")
 
   useEffect(() => {
-    getCountryGDP("ALB").then((res) => {
-      setLatestGDP(res[0])
-    })
-  }, [])
+    console.log("countryAbbreviation", countryAbbreviation)
+    console.log("latestGDP", latestGDP)
+  }, [countryAbbreviation, latestGDP])
+  
+  const doGetGDP = useCallback(() => {
+     getCountryGDP(countryAbbreviation).then((res) => {
+       setLatestGDP(res[0])
+     })
+  }, [countryAbbreviation])
+  const handleGetGDP = () => {
+    // TODO: if no country show error else fetch gdp
+    doGetGDP()
+  }
 
   return (
    <div>
@@ -27,6 +36,7 @@ const App: React.FC = (): ReactElement => {
       autoHighlight
       getOptionLabel={(option) => option.label}
       renderOption={(props, option) => (
+        // TODO: add code to country list and render flags 
         <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
           <img
             loading="lazy"
@@ -50,7 +60,7 @@ const App: React.FC = (): ReactElement => {
         />
       )}
     />
-    <Button onClick={() => {getCountryGDP(countryAbbreviation)}}>Go</Button>
+    <Button onClick={() => {handleGetGDP()}}>Go</Button>
    </div>
   );
 }
